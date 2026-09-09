@@ -324,9 +324,19 @@ a:hover{color:var(--brand-deep);}
 /* ⚠️ EL ESTADO NO SE DICE SOLO CON COLOR. La norma de accesibilidad no acepta que la única
    diferencia entre «activo» y «no activo» sea el tono, y aquí no hay pastilla que lo cante. El
    peso hace ese trabajo: IBM Plex Mono está cargada en 400 y en 500 —las dos, ya estaban— así
-   que el idioma vigente va en 500 sobre --ink y el otro en 400 sobre --ink-mute. Dos señales
-   independientes, cero elementos nuevos. */
-.idioma-b[aria-pressed="true"]{color:var(--ink);font-weight:500;}
+   que el idioma vigente va en 500 y el otro en 400 sobre --ink-mute. Dos señales
+   independientes, cero elementos nuevos.
+
+   EL VIGENTE VA EN COBALTO, NO EN TINTA. En negro heredaba tan bien la fila del pie que dejaba de
+   leerse como algo pulsable: parecía un dato menor más, al lado del año. El cobalto es el armazón
+   de marca de la página —nunca un estado del dato, §9— así que aquí no colisiona con ningún eje y
+   es justo lo que dice «esto es un control». Mide 7,64:1 sobre papel, de sobra para 12px. El peso
+   sigue siendo la señal no cromática: el color se suma, no sustituye.
+
+   ⚠️ NO SUBIR EL PESO A 600/700. Solo hay .woff2 de IBM Plex Mono en 400 y 500; cualquier peso por
+   encima lo sintetiza el navegador y el mono sale emborronado. La «negrita» de este control es el
+   500 que ya estaba. */
+.idioma-b[aria-pressed="true"]{color:var(--brand);font-weight:500;}
 /* El que NO está activo es el que se puede pulsar, así que es el que se comporta como enlace. */
 .idioma-b[aria-pressed="false"]:hover{color:var(--ink);text-decoration:underline;
   text-underline-offset:3px;text-decoration-thickness:1px;}
