@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Radar de Capacidad — Inteligencia de la red eléctrica española</title>
-<meta name="description" content="Informe mensual gratuito: dónde la red eléctrica española tiene capacidad de acceso disponible (CEP/CAD), nodo a nodo, y qué nodos liberan o pierden capacidad cada mes. Datos CNMC, curados.">
+<title data-en="Capacity Radar — Intelligence on the Spanish power grid">Radar de Capacidad — Inteligencia de la red eléctrica española</title>
+<meta name="description" content="Informe mensual gratuito: dónde la red eléctrica española tiene capacidad de acceso disponible (CEP/CAD), nodo a nodo, y qué nodos liberan o pierden capacidad cada mes. Datos CNMC, curados." data-en-content="Free monthly report: where the Spanish power grid has available access capacity (CEP/CAD), node by node, and which nodes release or lose capacity each month. CNMC data, curated.">
 <meta name="theme-color" content="#FFFFFF">
 
 <!-- Favicon: isotipo Nodara (la N como red de nudos) sobre lámina de papel; nudo activo en cobalto -->
@@ -12,15 +12,15 @@
 
 <!-- Open Graph: así el enlace en LinkedIn muestra tarjeta -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Radar de Capacidad — la red eléctrica española, cada mes">
-<meta property="og:description" content="Informe mensual gratuito con la capacidad de acceso disponible nodo a nodo (CEP/CAD) y qué nodos se mueven mes a mes. Datos oficiales CNMC, curados.">
+<meta property="og:title" content="Radar de Capacidad — la red eléctrica española, cada mes" data-en-content="Capacity Radar — the Spanish power grid, every month">
+<meta property="og:description" content="Informe mensual gratuito con la capacidad de acceso disponible nodo a nodo (CEP/CAD) y qué nodos se mueven mes a mes. Datos oficiales CNMC, curados." data-en-content="Free monthly report with node-by-node available access capacity (CEP/CAD) and which nodes move month to month. Official CNMC data, curated.">
 <meta property="og:site_name" content="Nodara">
-<meta property="og:locale" content="es_ES">
+<meta property="og:locale" content="es_ES" data-en-content="en_US">
 <meta property="og:url" content="https://vsimobaeza.github.io/NodaraWeb/">
 <meta property="og:image" content="https://vsimobaeza.github.io/NodaraWeb/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Nodara · Radar de Capacidad — dónde la red española tiene sitio, cada mes">
+<meta property="og:image:alt" content="Nodara · Radar de Capacidad — dónde la red española tiene sitio, cada mes" data-en-content="Nodara · Capacity Radar — where the Spanish grid has room, every month">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index,follow">
 
@@ -243,6 +243,35 @@ a:hover{color:var(--brand-deep);}
 .logo-mark .edge{stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;fill:none;}
 .logo-mark .node{fill:var(--ink);}
 .logo-mark .node.on{fill:var(--brand);}
+/* ══════════════ EL CONMUTADOR DE IDIOMA ══════════════
+   Arriba y centrado, a la misma altura óptica que el wordmark. El wordmark mide 40px de caja y
+   este control unos 26, asi que se le suma la mitad de la diferencia para que los dos queden
+   centrados sobre la misma linea invisible; igualar el `top` a pelo los deja descuadrados.
+
+   ⚠️ Va DENTRO de .hero y en absoluto, como la marca. En flujo normal empujaria el titular
+   hacia abajo y el formulario se saldria del primer pantallazo, que es el unico trabajo de
+   esta pagina (ver docs/producto.md §8.2). */
+.idioma{
+  position:absolute;z-index:3;display:flex;
+  left:50%;transform:translateX(-50%);
+  top:calc(clamp(26px,4.4vh,46px) + 7px);
+  border:1px solid var(--hair-hi);   /* --hair-hi y no --hair: WCAG 1.4.11 pide 3:1 en el borde
+                                        de un control, y --hair da 1,15:1 */
+}
+.idioma-b{
+  font-family:var(--mono);font-size:var(--l-xs);letter-spacing:.1em;
+  background:none;border:0;color:var(--ink-mute);cursor:pointer;
+  padding:5px 10px;line-height:1;
+  transition:color .14s var(--out),background-color .14s var(--out);
+}
+.idioma-b:hover{color:var(--ink);}
+.idioma-b.is-on{background:var(--brand);color:#fff;}   /* blanco sobre --brand: 7,64:1 */
+.idioma-b:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+/* Sin JS el conmutador no hace nada, asi que no se enseña: la pagina se queda en español y
+   entera, que es el comportamiento correcto. Se muestra desde el propio script. */
+.idioma{display:none;}
+.js .idioma{display:flex;}
+
 /* El wordmark de la LANDING: minúsculas, Light y solo. Tres decisiones que van juntas y que no
    se pueden separar sin romperlo:
      · PESO 300 (Light), subido desde 100 (Thin) el 2026-09-09 a petición de Víctor. El Thin
@@ -578,7 +607,7 @@ a:hover{color:var(--brand-deep);}
     <span class="rail-tick">08·03</span>
     <span class="rail-tick">09·01</span>
   </div>
-  <div class="rail-bot">archivo</div>
+  <div class="rail-bot" data-en="archive">archivo</div>
 </aside>
 
 <main>
@@ -594,6 +623,15 @@ a:hover{color:var(--brand-deep);}
        16px y no cabe una palabra). -->
   <div class="marca">
     <span class="wordmark">nodara</span>
+  </div>
+
+  <!-- Conmutador de idioma. Dos botones de verdad, no un enlace ni un <select>: el estado se
+       comunica con aria-pressed, que es lo que lee un lector de pantalla. El grupo lleva
+       aria-label bilingüe porque el propio control es lo que se usa cuando no entiendes la
+       lengua en la que está la página. -->
+  <div class="idioma" role="group" aria-label="Idioma / Language">
+    <button type="button" class="idioma-b is-on" data-lang="es" aria-pressed="true" lang="es">ES</button>
+    <button type="button" class="idioma-b"       data-lang="en" aria-pressed="false" lang="en">EN</button>
   </div>
 
   <div class="hero-map">
@@ -613,41 +651,41 @@ a:hover{color:var(--brand-deep);}
   <div class="wrap">
     <div class="hero-copy">
 
-      <h1>Dónde la red española tiene sitio,<br><span class="light">cada mes.</span></h1>
+      <h1 data-en='Where the Spanish grid has room,<br><span class="light">every month.</span>'>Dónde la red española tiene sitio,<br><span class="light">cada mes.</span></h1>
 
-      <p class="lede">La <b>capacidad de acceso disponible nodo a nodo</b> de la red eléctrica
+      <p class="lede" data-en="The <b>available access capacity, node by node</b>, of the Spanish power grid, and which nodes <b>release or lose</b> capacity against the month before. Official CNMC and REE data, curated and with a verdict.">La <b>capacidad de acceso disponible nodo a nodo</b> de la red eléctrica
         española, y qué nudos <b>liberan o pierden</b> capacidad respecto al mes anterior.
         Dato oficial de CNMC y REE, curado y con veredicto.</p>
 
       <form class="captura" id="captura" action="https://formspree.io/f/mqerydva" method="POST">
-        <label class="k" for="email">Destinatario</label>
+        <label class="k" for="email" data-en="Recipient">Destinatario</label>
         <div class="campo">
           <input id="email" name="email" type="email" required autocomplete="email"
-                 placeholder="tu@correo.com" spellcheck="false">
-          <button class="enviar" type="submit" aria-label="Suscribirme al Radar de Capacidad">
+                 placeholder="tu@correo.com" data-en-placeholder="you@email.com" spellcheck="false">
+          <button class="enviar" type="submit" aria-label="Suscribirme al Radar de Capacidad" data-en-aria-label="Subscribe to the Capacity Radar">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2"
                     stroke-linecap="square"/>
             </svg>
           </button>
         </div>
-        <p class="fine">1 email al mes · sin spam · baja en un clic</p>
+        <p class="fine" data-en="1 email a month · no spam · unsubscribe in one click">1 email al mes · sin spam · baja en un clic</p>
 
         <div class="alta">
           <span>
-            <span class="k">Destinatario</span>
+            <span class="k" data-en="Recipient">Destinatario</span>
             <span class="alta-v" id="alta-v"></span>
           </span>
-          <span class="sello">Alta registrada<small id="sello-f"></small></span>
+          <span class="sello" data-en='Signed up<small id="sello-f"></small>'>Alta registrada<small id="sello-f"></small></span>
         </div>
 
         <p class="msg" id="msg" role="status" aria-live="polite"></p>
       </form>
 
       <div class="leyenda">
-        <span><i class="d-on"></i>240 nudos admiten nueva demanda</span>
-        <span><i class="d-off"></i>540 sin margen</span>
-        <span>CNMC · periodo 072026</span>
+        <span data-en='<i class="d-on"></i>240 nodes admit new demand'><i class="d-on"></i>240 nudos admiten nueva demanda</span>
+        <span data-en='<i class="d-off"></i>540 with no headroom'><i class="d-off"></i>540 sin margen</span>
+        <span data-en="CNMC · period 072026">CNMC · periodo 072026</span>
       </div>
 
     </div>
@@ -660,22 +698,22 @@ a:hover{color:var(--brand-deep);}
 
     <div class="banda-intro">
       <div>
-        <h2>La CNMC publica una foto.<br><span class="light">Nosotros guardamos<br>la serie.</span></h2>
+        <h2 data-en='The CNMC publishes a snapshot.<br><span class="light">We keep<br>the series.</span>'>La CNMC publica una foto.<br><span class="light">Nosotros guardamos<br>la serie.</span></h2>
       </div>
-      <p>La fuente no guarda histórico: publica el estado vigente y sobrescribe. Desde el
+      <p data-en="The source keeps no history: it publishes the state in force and overwrites it. Since 2&nbsp;March&nbsp;2026 we keep every edition <b>exactly as it was published</b>, unretouched. That is what makes it possible to say <b>what changed</b>, and it cannot be rebuilt after the fact.">La fuente no guarda histórico: publica el estado vigente y sobrescribe. Desde el
         2&nbsp;de&nbsp;marzo de 2026 guardamos cada edición <b>tal y como se publicó</b>, sin
         retocar. Eso es lo que permite decir <b>qué cambió</b>, y no se puede reconstruir
         hacia atrás.</p>
     </div>
 
     <div class="lectura">
-      <span class="lectura-mw" id="lec-mw">51.069<u>MW</u></span>
-      <span class="lectura-d" id="lec-d">+168 MW vs. edición anterior</span>
-      <span class="lectura-e" id="lec-e">EDICIÓN 2026-09-01 · 252 NUDOS</span>
+      <span class="lectura-mw" id="lec-mw" data-en="51,069<u>MW</u>">51.069<u>MW</u></span>
+      <span class="lectura-d" id="lec-d" data-en="+168 MW vs. previous edition">+168 MW vs. edición anterior</span>
+      <span class="lectura-e" id="lec-e" data-en="EDITION 2026-09-01 · 252 NODES">EDICIÓN 2026-09-01 · 252 NUDOS</span>
     </div>
 
     <svg class="traza" id="traza" viewBox="0 0 1200 240"
-         role="img" aria-label="Capacidad de acceso disponible para demanda CEP con soporte de red, por edición: 37.373 MW en marzo de 2026, 51.069 MW en septiembre de 2026.">
+         role="img" aria-label="Capacidad de acceso disponible para demanda CEP con soporte de red, por edición: 37.373 MW en marzo de 2026, 51.069 MW en septiembre de 2026." data-en-aria-label="Available access capacity for CEP demand with grid support, by edition: 37,373 MW in March 2026, 51,069 MW in September 2026.">
       <defs>
         <linearGradient id="tzfill" x1="0" y1="0" x2="0" y2="1">
           <stop class="tz-s0" offset="0%"/>
@@ -701,11 +739,11 @@ a:hover{color:var(--brand-deep);}
       <circle class="tz-dot ult" cx="1140" cy="63.4" r="6.5"/>
 
       <text class="tz-lab" x="60"   y="236" text-anchor="start">mar</text>
-      <text class="tz-lab" x="240"  y="236" text-anchor="middle">abr</text>
+      <text class="tz-lab" x="240"  y="236" text-anchor="middle"  data-en="apr">abr</text>
       <text class="tz-lab" x="420"  y="236" text-anchor="middle">may</text>
       <text class="tz-lab" x="600"  y="236" text-anchor="middle">jun</text>
       <text class="tz-lab" x="780"  y="236" text-anchor="middle">jul</text>
-      <text class="tz-lab" x="960"  y="236" text-anchor="middle">ago</text>
+      <text class="tz-lab" x="960"  y="236" text-anchor="middle"  data-en="aug">ago</text>
       <text class="tz-lab" x="1140" y="236" text-anchor="end">sep</text>
     </svg>
 
@@ -720,14 +758,14 @@ a:hover{color:var(--brand-deep);}
           <span class="pz"><i class="pz-bar"></i><b class="pz-e">08-03</b></span>
           <span class="pz"><i class="pz-bar"></i><b class="pz-e">09-01</b></span>
         </div>
-        <p class="peine-nota"><b>19 fotos guardadas</b> desde marzo — 7 ediciones de REE y
+        <p class="peine-nota" data-en="<b>19 snapshots kept</b> since March — 7 REE editions and 12 CNMC layers."><b>19 fotos guardadas</b> desde marzo — 7 ediciones de REE y
           12 capas de CNMC.</p>
       </div>
       <div class="peine-vs">
         <div class="peine-row">
-          <span class="pz"><i class="pz-bar"></i><b class="pz-e">hoy</b><span class="pz-nota">vigente</span></span>
+          <span class="pz"><i class="pz-bar"></i><b class="pz-e" data-en="today">hoy</b><span class="pz-nota" data-en="in force">vigente</span></span>
         </div>
-        <p class="peine-nota">Lo que la fuente<br>expone ahora mismo.</p>
+        <p class="peine-nota" data-en="What the source<br>is exposing right now.">Lo que la fuente<br>expone ahora mismo.</p>
       </div>
     </div>
 
@@ -737,30 +775,30 @@ a:hover{color:var(--brand-deep);}
 <!-- ════════ LAS LÁMINAS ════════ -->
 <section class="laminas">
   <div class="wrap">
-    <h2>Tres cosas que el visor<br><span class="light">no te dice.</span></h2>
+    <h2 data-en='Three things the viewer<br><span class="light">will not tell you.</span>'>Tres cosas que el visor<br><span class="light">no te dice.</span></h2>
 
     <div class="lams">
 
       <article class="lam">
         <span class="lam-campo">CAD1</span>
         <svg class="lam-viz" viewBox="0 0 320 96" role="img"
-             aria-label="De los 83.870 MW publicados como disponibles, 51.069 sirven para un centro de datos.">
+             aria-label="De los 83.870 MW publicados como disponibles, 51.069 sirven para un centro de datos." data-en-aria-label="Of the 83,870 MW published as available, 51,069 are usable by a data center.">
           <rect class="lv-track" x="0" y="26" width="320" height="26"/>
           <rect class="lv-fill" x="0" y="26" width="195" height="26"/>
           <line class="lv-hair" x1="195" y1="14" x2="195" y2="64"/>
-          <text class="lv-num" x="0"   y="16">51.069 MW</text>
-          <text class="lv-lab" x="320" y="16" text-anchor="end">de 83.870 publicados</text>
-          <text class="lv-lab" x="0"   y="82">el resto no admite electrónica de potencia</text>
+          <text class="lv-num" x="0"   y="16" data-en="51,069 MW">51.069 MW</text>
+          <text class="lv-lab" x="320" y="16" text-anchor="end" data-en="of 83,870 published">de 83.870 publicados</text>
+          <text class="lv-lab" x="0"   y="82" data-en="the rest will not take power electronics">el resto no admite electrónica de potencia</text>
         </svg>
-        <h3>El campo que miras no es el tuyo</h3>
-        <p>El visor publica varios márgenes de demanda y solo uno vale para un centro de datos:
+        <h3 data-en="The field you are reading is not yours">El campo que miras no es el tuyo</h3>
+        <p data-en="The viewer publishes several demand margins and only one works for a data center: CEP with grid support. Reading the field next to it inflates the number by 64%.">El visor publica varios márgenes de demanda y solo uno vale para un centro de datos:
           CEP con soporte de red. Leer el campo de al lado infla la cifra un 64 %.</p>
       </article>
 
       <article class="lam">
-        <span class="lam-campo">Δ mes</span>
+        <span class="lam-campo" data-en="Δ month">Δ mes</span>
         <svg class="lam-viz" viewBox="0 0 260 96" role="img"
-             aria-label="Variación entre ediciones consecutivas: +2.796, −16, +5.272, +3.803, +1.673 y +168 MW.">
+             aria-label="Variación entre ediciones consecutivas: +2.796, −16, +5.272, +3.803, +1.673 y +168 MW." data-en-aria-label="Change between consecutive editions: +2,796, −16, +5,272, +3,803, +1,673 and +168 MW.">
           <line class="lv-hair" x1="0" y1="58" x2="260" y2="58"/>
           <rect class="lv-fill" x="10"  y="38.9" width="26" height="19.1"/>
           <rect class="lv-bad"  x="52"  y="58"   width="26" height="3"/>
@@ -768,27 +806,27 @@ a:hover{color:var(--brand-deep);}
           <rect class="lv-fill" x="136" y="32"   width="26" height="26"/>
           <rect class="lv-fill" x="178" y="46.6" width="26" height="11.4"/>
           <rect class="lv-fill" x="220" y="55"   width="26" height="3"/>
-          <text class="lv-num" x="0" y="14">+13.696 MW</text>
-          <text class="lv-lab" x="0" y="92">6 comparaciones · una sola bajada, de 16 MW</text>
+          <text class="lv-num" x="0" y="14" data-en="+13,696 MW">+13.696 MW</text>
+          <text class="lv-lab" x="0" y="92" data-en="6 comparisons · one drop, of 16 MW">6 comparaciones · una sola bajada, de 16 MW</text>
         </svg>
-        <h3>Un nudo que abre y nadie mira</h3>
-        <p>Sin la foto del mes anterior, una liberación de capacidad es indistinguible del estado
+        <h3 data-en="A node opens and nobody is looking">Un nudo que abre y nadie mira</h3>
+        <p data-en="Without last month's snapshot, a capacity release is indistinguishable from the normal state. The movement only exists if someone kept the before.">Sin la foto del mes anterior, una liberación de capacidad es indistinguible del estado
           normal. El movimiento solo existe si alguien guardó el antes.</p>
       </article>
 
       <article class="lam">
         <span class="lam-campo">Scc</span>
         <svg class="lam-viz" viewBox="0 0 200 96" role="img"
-             aria-label="Nudo con margen publicado pero limitado por potencia de cortocircuito.">
+             aria-label="Nudo con margen publicado pero limitado por potencia de cortocircuito." data-en-aria-label="Node with published headroom but limited by short-circuit power.">
           <circle class="lv-nudo" cx="56" cy="46" r="17"/>
           <circle class="lv-cerco" cx="56" cy="46" r="27"/>
           <line class="lv-hair" x1="90" y1="46" x2="128" y2="46"/>
-          <text class="lv-num" x="136" y="42">no</text>
-          <text class="lv-num" x="136" y="60">conectable</text>
-          <text class="lv-lab" x="0" y="92">margen publicado ≠ conexión posible</text>
+          <text class="lv-num" x="136" y="42" data-en="not">no</text>
+          <text class="lv-num" x="136" y="60" data-en="connectable">conectable</text>
+          <text class="lv-lab" x="0" y="92" data-en="published MW ≠ connectable MW">margen publicado ≠ conexión posible</text>
         </svg>
-        <h3>Margen que no se puede usar</h3>
-        <p>Un nudo limitado por potencia de cortocircuito publica MW libres que no se pueden
+        <h3 data-en="Headroom you cannot use">Margen que no se puede usar</h3>
+        <p data-en="A node limited by short-circuit power publishes free MW that cannot be connected without reinforcement. It comes flagged, and the report says so before you ask.">Un nudo limitado por potencia de cortocircuito publica MW libres que no se pueden
           conectar sin refuerzo. Sale marcado, y el informe lo dice antes de que lo pidas.</p>
       </article>
 
@@ -799,32 +837,32 @@ a:hover{color:var(--brand-deep);}
 <!-- ════════ CIERRE ════════ -->
 <section class="cierre">
   <div class="wrap">
-    <h2>Empieza por saber<br><span class="light">dónde hay red.</span></h2>
-    <p>El próximo Radar sale cuando la CNMC publique el periodo. Un correo, sin más.</p>
+    <h2 data-en='Start by knowing<br><span class="light">where the grid is.</span>'>Empieza por saber<br><span class="light">dónde hay red.</span></h2>
+    <p data-en="The next Radar goes out when the CNMC publishes the period. One email, nothing else.">El próximo Radar sale cuando la CNMC publique el periodo. Un correo, sin más.</p>
 
     <form class="captura" action="https://formspree.io/f/mqerydva" method="POST">
-      <label class="k" for="email2">Destinatario</label>
+      <label class="k" for="email2" data-en="Recipient">Destinatario</label>
       <div class="campo">
         <input id="email2" name="email" type="email" required autocomplete="email"
-               placeholder="tu@correo.com" spellcheck="false">
-        <button class="enviar" type="submit" aria-label="Suscribirme al Radar de Capacidad">
+               placeholder="tu@correo.com" data-en-placeholder="you@email.com" spellcheck="false">
+        <button class="enviar" type="submit" aria-label="Suscribirme al Radar de Capacidad" data-en-aria-label="Subscribe to the Capacity Radar">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2"
                   stroke-linecap="square"/>
           </svg>
         </button>
       </div>
-      <p class="fine">1 email al mes · sin spam · baja en un clic</p>
+      <p class="fine" data-en="1 email a month · no spam · unsubscribe in one click">1 email al mes · sin spam · baja en un clic</p>
       <div class="alta">
-        <span><span class="k">Destinatario</span><span class="alta-v"></span></span>
-        <span class="sello">Alta registrada<small></small></span>
+        <span><span class="k" data-en="Recipient">Destinatario</span><span class="alta-v"></span></span>
+        <span class="sello" data-en="Signed up<small></small>">Alta registrada<small></small></span>
       </div>
       <p class="msg" role="status" aria-live="polite"></p>
     </form>
 
     <div class="pie">
-      <span>Nodara · Radar de Capacidad</span>
-      <span>Fuentes: CNMC · REE</span>
+      <span data-en="Nodara · Capacity Radar">Nodara · Radar de Capacidad</span>
+      <span data-en="Sources: CNMC · REE">Fuentes: CNMC · REE</span>
       <span class="sep">© <span id="year">2026</span></span>
     </div>
   </div>
@@ -835,6 +873,90 @@ a:hover{color:var(--brand-deep);}
 <script>
 (function(){
   'use strict';
+
+  /* ── 0. IDIOMA ────────────────────────────────────────────────────────────
+     La pagina esta ESCRITA en español y el ingles vive en atributos `data-en`.
+     No es capricho: el HTML servido tiene que ser legible entero sin JS
+     (docs/producto.md §8.2 — «el movimiento no oculta nada»), asi que el idioma
+     por defecto es el del documento y el conmutador solo reescribe encima.
+
+     ⚠️ CONSECUENCIA QUE HAY QUE SABER: Google y la tarjeta de LinkedIn SOLO ven
+     el español, porque nunca ejecutan este script. Para posicionar en ingles
+     harian falta dos URLs de verdad (/en/), no un conmutador. Esto sirve para
+     que un lector internacional entienda la pagina, no para SEO en ingles.
+
+     ⚠️ NO se autodetecta el idioma del navegador. El ICP es un broker español;
+     abrirle la pagina en ingles porque su Chrome esta en ingles seria peor. Se
+     respeta lo que el visitante elija, y se recuerda. */
+  var IDIOMA = 'es';
+  var alCambiarIdioma = [];   /* lo que hay que repintar: ver seccion 3 */
+
+  /* Cadenas que NO estan en el HTML porque las escribe el JS. */
+  var DIC = {
+    deltaEd:   { es:' MW vs. edición anterior',  en:' MW vs. previous edition' },
+    primeraEd: { es:'primera edición archivada', en:'first archived edition' },
+    edicion:   { es:'EDICIÓN ',                  en:'EDITION ' },
+    nudos:     { es:' NUDOS',                    en:' NODES' },
+    altaOk:    { es:'Revisa tu correo para confirmar. El próximo Radar te llega cuando la CNMC publique el periodo.',
+                 en:'Check your inbox to confirm. The next Radar reaches you when the CNMC publishes the period.' },
+    altaErr:   { es:'No se pudo enviar.',        en:'Could not send.' },
+    ups:       { es:'Ups: ',                     en:'Oops: ' }
+  };
+  function T(k){ return DIC[k][IDIOMA]; }
+
+  /* Los atributos traducibles. `data-en-<attr>` lleva el ingles; el español se
+     guarda la primera vez en `data-es-<attr>` para poder volver. */
+  var ATRIBUTOS = ['content', 'aria-label', 'placeholder'];
+
+  function aplicarIdioma(lang) {
+    IDIOMA = (lang === 'en') ? 'en' : 'es';
+    document.documentElement.lang = IDIOMA;
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-en]'), function (el) {
+      if (el.getAttribute('data-es') === null) {
+        el.setAttribute('data-es', el.tagName === 'TITLE' ? el.textContent : el.innerHTML);
+      }
+      var v = el.getAttribute(IDIOMA === 'en' ? 'data-en' : 'data-es');
+      if (el.tagName === 'TITLE') el.textContent = v; else el.innerHTML = v;
+    });
+
+    ATRIBUTOS.forEach(function (attr) {
+      Array.prototype.forEach.call(
+        document.querySelectorAll('[data-en-' + attr + ']'), function (el) {
+          var guarda = 'data-es-' + attr;
+          if (el.getAttribute(guarda) === null) el.setAttribute(guarda, el.getAttribute(attr) || '');
+          el.setAttribute(attr, el.getAttribute(IDIOMA === 'en' ? 'data-en-' + attr : guarda));
+        });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.idioma-b'), function (b) {
+      var on = b.getAttribute('data-lang') === IDIOMA;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+
+    for (var i = 0; i < alCambiarIdioma.length; i++) alCambiarIdioma[i]();
+
+    /* localStorage puede petar entero (modo privado, cookies bloqueadas): que no
+       se lleve por delante el cambio de idioma, que ya esta hecho. */
+    try { localStorage.setItem('nodara-lang', IDIOMA); } catch (e) {}
+  }
+
+  document.documentElement.className += ' js';   /* enseña el conmutador */
+
+  /* ⚠️ EL IDIOMA SE LEE AQUI PERO SE APLICA AL FINAL DEL SCRIPT, y el orden importa.
+     `IDIOMA` tiene que estar puesto YA, porque mil() y HOY() lo consultan. Pero
+     aplicarIdioma() dispara los repintados de `alCambiarIdioma`, y esa lista la
+     rellenan las secciones de mas abajo: llamarlo aqui la encontraria vacia y la
+     lectura del mes se quedaria con el separador de miles español en ingles.
+     Leer arriba, aplicar abajo. */
+  try {
+    if (localStorage.getItem('nodara-lang') === 'en') IDIOMA = 'en';
+  } catch (e) {}
+
+  Array.prototype.forEach.call(document.querySelectorAll('.idioma-b'), function (b) {
+    b.addEventListener('click', function () { aplicarIdioma(b.getAttribute('data-lang')); });
+  });
   var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
   /* ── 1. EL RADAR ──────────────────────────────────────────────────────────
@@ -916,7 +1038,8 @@ a:hover{color:var(--brand-deep);}
     { e:'2026-08-03', mw:50901, n:251, x:960  },
     { e:'2026-09-01', mw:51069, n:252, x:1140 }
   ];
-  var mil = function (v) { return v.toLocaleString('es-ES'); };
+  /* El separador de miles cambia con el idioma: 51.069 en es, 51,069 en en. */
+  var mil = function (v) { return v.toLocaleString(IDIOMA === 'en' ? 'en-GB' : 'es-ES'); };
 
   var traza = document.getElementById('traza'),
       lecMW = document.getElementById('lec-mw'),
@@ -934,15 +1057,23 @@ a:hover{color:var(--brand-deep);}
       lecMW.innerHTML = mil(p.mw) + '<u>MW</u>';
       if (prev) {
         var d = p.mw - prev.mw;
-        lecD.textContent = (d >= 0 ? '+' : '−') + mil(Math.abs(d)) + ' MW vs. edición anterior';
+        lecD.textContent = (d >= 0 ? '+' : '−') + mil(Math.abs(d)) + T('deltaEd');
         lecD.className = 'lectura-d' + (d < 0 ? ' baja' : '');
       } else {
-        lecD.textContent = 'primera edición archivada';
+        lecD.textContent = T('primeraEd');
         lecD.className = 'lectura-d';
       }
-      lecE.textContent = 'EDICIÓN ' + p.e + ' · ' + p.n + ' NUDOS';
+      lecE.textContent = T('edicion') + p.e + ' · ' + p.n + T('nudos');
       if (cur) { cur.setAttribute('x1', p.x); cur.setAttribute('x2', p.x); }
     }
+
+    /* ⚠️ ESTA LECTURA HAY QUE REPINTARLA AL CAMBIAR DE IDIOMA, y no basta con el
+       volcado de `data-en`. Ese volcado restaura el texto ORIGINAL del HTML, o sea
+       la ultima edicion; si el visitante ha arrastrado por la serie y esta mirando
+       marzo, cambiar de idioma le devolveria las cifras de septiembre traducidas.
+       Se fuerza `leer()` sobre el indice actual: iAct = -1 salta su guarda de
+       «ya estoy en ese punto». */
+    alCambiarIdioma.push(function () { var i = iAct; iAct = -1; leer(i); });
 
     function scrub() {
       pendT = false;
@@ -973,8 +1104,13 @@ a:hover{color:var(--brand-deep);}
      Mejora progresiva: sin JS el form hace POST normal a Formspree. Con JS, el
      campo se CUMPLIMENTA — deja de ser input y pasa a ser un campo relleno del
      cajetín, con su sello fechado. El formulario no desaparece: se rellena. */
-  var HOY = new Date().toLocaleDateString('es-ES',
-              { day:'2-digit', month:'2-digit', year:'numeric' });
+  /* Funcion y no constante: el sello se fecha al enviar, y para entonces el idioma
+     puede haber cambiado. dd/mm/aaaa en los dos (en-GB, no en-US): el dato es europeo
+     y un 09/01 leido como enero por un americano seria un error de verdad. */
+  var HOY = function () {
+    return new Date().toLocaleDateString(IDIOMA === 'en' ? 'en-GB' : 'es-ES',
+             { day:'2-digit', month:'2-digit', year:'numeric' });
+  };
 
   Array.prototype.forEach.call(document.querySelectorAll('form.captura'), function (form) {
     var msg = form.querySelector('.msg'),
@@ -995,26 +1131,31 @@ a:hover{color:var(--brand-deep);}
       }).then(function (r) {
         if (r.ok) {
           if (val) val.textContent = inp.value;
-          if (fec) fec.textContent = HOY;
+          if (fec) fec.textContent = HOY();
           form.classList.add('hecho');
           if (msg) {
             msg.className = 'msg ok';
-            msg.textContent = 'Revisa tu correo para confirmar. El próximo Radar te llega cuando la CNMC publique el periodo.';
+            msg.textContent = T('altaOk');
           }
         } else {
           return r.json().then(function (d) {
-            throw new Error((d.errors && d.errors[0] && d.errors[0].message) || 'No se pudo enviar.');
+            throw new Error((d.errors && d.errors[0] && d.errors[0].message) || T('altaErr'));
           });
         }
       }).catch(function (err) {
         if (btn) btn.disabled = false;
-        if (msg) { msg.className = 'msg err'; msg.textContent = 'Ups: ' + err.message; }
+        if (msg) { msg.className = 'msg err'; msg.textContent = T('ups') + err.message; }
       });
     });
   });
 
   var yr = document.getElementById('year');
   if (yr) yr.textContent = new Date().getFullYear();
+
+  /* Y AHORA SI: con todas las secciones montadas y sus repintados registrados.
+     Si el idioma guardado es el español no hay nada que reescribir —el HTML ya
+     esta en español— pero se llama igual para dejar el conmutador marcado. */
+  aplicarIdioma(IDIOMA);
 })();
 </script>
 </body>
