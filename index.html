@@ -305,6 +305,18 @@ a:hover{color:var(--brand-deep);}
     transparent 100%);
   mix-blend-mode:multiply;   /* sobre papel la banda oscurece: si sumara, no se vería */
   transform:translateX(-100%);
+  /* El degradado de arriba solo difumina a IZQUIERDA y DERECHA. En vertical la banda iba
+     de borde a borde de la caja y se cortaba en seco: un rectángulo con dos aristas
+     horizontales visibles, sobre todo al pasar por el papel de encima y de debajo de la
+     península, donde no hay mapa que las disimule. Esta máscara le da los dos extremos.
+
+     ⚠️ LA MÁSCARA VA EN LA BANDA, NO EN `.barrido`. Un mask sobre el contenedor crea un
+     contexto de apilamiento que AÍSLA, y entonces el mix-blend-mode de dentro deja de ver
+     el mapa que tiene detrás: la banda pasaría de oscurecer a superponerse, que es
+     justamente el efecto que no funciona sobre papel. Sobre el propio elemento que mezcla
+     no ocurre — se enmascara primero y se funde después con el fondo del grupo. */
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.45) 12%,#000 30%,#000 70%,rgba(0,0,0,.45) 88%,transparent 100%);
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.45) 12%,#000 30%,#000 70%,rgba(0,0,0,.45) 88%,transparent 100%);
 }
 
 .fm-tip{
