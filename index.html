@@ -118,6 +118,7 @@
     --sweep:12s;       /* periodo del barrido horizontal sobre el mapa */
     --ciclo:24s;       /* ciclo completo: dos barridos, y en el segundo baja el escáner */
     --doc:100vh;       /* alto real del documento; lo mide el JS, esto es solo el respaldo */
+    --hero:100svh;     /* dónde acaba el héroe: de ahí sale el escáner. También lo mide el JS */
     --escaner-alto:44vh;
     --out:cubic-bezier(.16,1,.3,1);   /* ease-out-quint, sin rebote */
     --z-tip:40; --z-rail:60;
@@ -342,8 +343,14 @@ a:hover{color:var(--brand-deep);}
    Por qué multiply y no un color plano: multiply apenas toca los píxeles oscuros y sí los
    claros, así que el papel se tiñe y la tipografía negra se queda como está. Una capa
    opaca por encima del texto lo lavaría. */
+/* ⚠️ EL CONTENEDOR EMPIEZA DONDE ACABA EL HÉROE, y de ahí sale el efecto. La banda arranca
+   por encima de su propio contenedor, así que el overflow:hidden la tiene recortada hasta
+   que cruza el borde superior — que es exactamente el borde inferior del héroe. No hay que
+   animar ninguna opacidad para que «aparezca»: emerge de debajo del héroe porque hasta ese
+   instante estaba materialmente fuera de su caja. */
 .escaner{
-  position:absolute;top:0;left:0;width:100%;height:var(--doc);
+  position:absolute;top:var(--hero);left:0;width:100%;
+  height:calc(var(--doc) - var(--hero));
   pointer-events:none;overflow:hidden;
 }
 .escaner i{
@@ -551,15 +558,21 @@ a:hover{color:var(--brand-deep);}
     50%,100% {clip-path:inset(0 0 0% 0);  opacity:0;}
   }
 
-  /* El escáner entra justo cuando la estela toca el pliegue (50 % del ciclo) y tarda algo
-     más de diez segundos en llegar al pie. Va lento a propósito: es una invitación a bajar,
-     no un elemento que reclame atención. */
+  /* Sale EXACTAMENTE cuando el barrido del mapa termina su pasada: el barrido cruza en 12 s
+     y el ciclo son 24, así que el 50 % del ciclo es el instante en que la banda horizontal
+     abandona la península. Ahí sale esta por debajo del héroe.
+
+     Y baja rápido —2,9 s para toda la página— a propósito. Es un golpe de vista que dice
+     «esto sigue», no un elemento que acompañe la lectura: a la velocidad anterior competía
+     con el contenido durante doce segundos de cada veinticuatro. Ahora pasa y desaparece.
+
+     No hace falta animar la opacidad de entrada: el contenedor la tiene recortada hasta que
+     cruza el pliegue. Solo se apaga al final, para que no dé un tirón al reaparecer arriba. */
   .listo .escaner i{animation:escanear var(--ciclo) linear infinite;}
   @keyframes escanear{
-    0%,48%   {transform:translateY(calc(var(--escaner-alto) * -1));opacity:0;}
-    52%      {opacity:1;}
-    94%      {opacity:1;}
-    99%,100% {transform:translateY(var(--doc));opacity:0;}
+    0%,50%   {transform:translateY(calc(var(--escaner-alto) * -1));opacity:1;}
+    61%      {transform:translateY(calc(var(--doc) - var(--hero)));opacity:1;}
+    62%,100% {transform:translateY(calc(var(--doc) - var(--hero)));opacity:0;}
   }
 
   /* cada nudo destella cuando el barrido pasa por SU coordenada real.
@@ -1095,9 +1108,20 @@ a:hover{color:var(--brand-deep);}
      100vh es la ventana, y 100% de body no incluye lo que desborda. Se mide y se publica en
      --doc. Se remide al cambiar el tamaño (con un respiro, que resize dispara en ráfaga) y
      cuando acaban de cargar las fuentes, porque hasta entonces el texto ocupa otra cosa. */
+  var hero = document.querySelector('.hero');
   var medir = function () {
     var alto = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
     document.documentElement.style.setProperty('--doc', alto + 'px');
+    /* Dónde acaba el héroe, en coordenadas del DOCUMENTO. rect.bottom es relativo a la
+       ventana, así que hay que sumarle el scroll. ⚠️ No vale offsetTop+offsetHeight: ambos
+       redondean a entero y dependen de quién sea el offsetParent — medido, daban 819 px
+       donde el borde real estaba en 805. Catorce píxeles es justo lo que se nota cuando lo
+       que tiene que cuadrar es el instante en que algo asoma por un borde. */
+    if (hero) {
+      var b = hero.getBoundingClientRect();
+      document.documentElement.style.setProperty(
+        '--hero', (b.bottom + window.scrollY).toFixed(1) + 'px');
+    }
   };
   medir();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
