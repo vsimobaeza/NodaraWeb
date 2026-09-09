@@ -7,7 +7,6 @@
      abrirla desde captacion/ para que `fuentes/` resuelva. */
   @font-face{font-family:'Cabinet Grotesk';src:url(fuentes/cabinet-grotesk-100-900.woff2);font-weight:100 900;font-display:block;}
   @font-face{font-family:'Satoshi';src:url(fuentes/satoshi-300-900.woff2);font-weight:300 900;font-display:block;}
-  @font-face{font-family:'Zodiak';src:url(fuentes/zodiak-700.woff2);font-weight:700;font-display:block;} /* SOLO el wordmark */
   @font-face{font-family:'IBM Plex Mono';src:url(fuentes/ibm-plex-mono-400.woff2);font-weight:400;font-display:block;}
 </style>
 <style>
@@ -25,12 +24,10 @@
     --track:#EDF1F6;
     --brand:#1B3FD8;
     --brand-deep:#122E9E;
-    --ok:#1F7A44;
     --titulo:"Cabinet Grotesk","Segoe UI",-apple-system,Arial,sans-serif;
     --sans:"Satoshi","Segoe UI",-apple-system,Arial,sans-serif;
     --cuerpo:"Satoshi","Segoe UI",-apple-system,Arial,sans-serif;
     --mono:"IBM Plex Mono","Cascadia Code",Consolas,ui-monospace,monospace;
-    --marca:"Zodiak",Georgia,"Times New Roman",serif;
     --w-titulo:700;
     --w-fuerte:600;
   }
@@ -56,12 +53,22 @@
 
   /* cajetín */
   .cajetin{display:flex;align-items:stretch;border-bottom:3px solid var(--ink);background:var(--panel);}
-  .cj-brand{display:flex;align-items:center;gap:16px;padding:18px 28px;flex:1;}
-  .logo-mark{width:48px;height:48px;flex:none;}
-  .logo-mark .edge{stroke:var(--ink);stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round;fill:none;}
-  .logo-mark .node{fill:var(--ink);}
-  .logo-mark .node.on{fill:var(--brand);}
-  .wordmark{font-family:var(--marca);font-weight:700;font-size:40px;line-height:1;letter-spacing:.01em;color:var(--ink);}
+  .cj-brand{display:flex;align-items:center;padding:18px 30px;flex:1;}
+  /* ⚠️ LA TARJETA LLEVA LA MARCA DE LA LANDING, NO LA DEL INFORME (2026-09-09). Es la puerta de
+     entrada a la landing: se comparte por WhatsApp o LinkedIn y el siguiente clic aterriza en
+     esa pagina. Si la tarjeta enseña «Nodara» en Zodiak con isotipo y la pagina «nodara» en
+     minusculas sin el, el visitante cree que se ha equivocado de sitio. El informe y el
+     Registro SI conservan Zodiak y el isotipo: ahi la marca vive dentro de un documento.
+
+     ⚠️ NO usa `--marca`. Ese token vale Zodiak y lo vuelca `npm run diseno` desde el informe;
+     ponerlo aqui lo devolveria a la serifa en el primer `--aplicar`. La familia va escrita en
+     la regla, igual que `--marca-landing` en la landing.
+
+     ⚠️ 54px Y NO LOS 40 DE LA LANDING, a proposito. Esto es un poster de 1200px que WhatsApp
+     enseña a un tercio de tamaño: 40px de peso Light bajarian a ~13px efectivos y el trazo fino
+     se deshilacha en la miniatura, que es donde de verdad se ve esta pieza. */
+  .wordmark{font-family:"Cabinet Grotesk","Segoe UI",-apple-system,Arial,sans-serif;
+            font-weight:300;font-size:54px;line-height:1;letter-spacing:.04em;color:var(--ink);}
   .cj-field{border-left:2px solid var(--hair);padding:14px 26px;display:flex;flex-direction:column;justify-content:center;gap:6px;}
   .cj-k{font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
   .cj-v{font-family:var(--sans);font-weight:var(--w-fuerte);font-size:23px;letter-spacing:-.01em;color:var(--ink);white-space:nowrap;}
@@ -80,14 +87,16 @@
     text-align:left;text-wrap:pretty;}
   .lede b{color:var(--ink);font-weight:600;}
 
-  /* unifilar (estado final: nudos verdes encendidos) */
+  /* unifilar (estado final: nudos encendidos en cobalto) */
   .uni{margin-top:auto;}
   .uni svg{display:block;width:100%;height:auto;}
   .u-bus{stroke:var(--brand);stroke-width:4;fill:none;}
   .u-stub{stroke:var(--brand);stroke-width:3.5;fill:none;}
   .u-j{fill:var(--brand);}
-  .nd-ok{fill:var(--ok);stroke:#fff;stroke-width:3;}
-  .nd-halo{fill:none;stroke:var(--ok);stroke-width:2;opacity:.4;}
+  /* Cobalto, no verde: la landing pinta el dato con la marca desde el 2026-09-09 y esta
+     tarjeta es su puerta de entrada (§8.2). El informe conserva el verde. */
+  .nd-ok{fill:var(--brand);stroke:#fff;stroke-width:3;}
+  .nd-halo{fill:none;stroke:var(--brand);stroke-width:2;opacity:.4;}
   .nd-closed{fill:#C2CAD6;stroke:#fff;stroke-width:3;}
 
   /* pie: leyenda + especificaciones */
@@ -107,14 +116,7 @@
 
     <div class="cajetin">
       <div class="cj-brand">
-        <svg class="logo-mark" viewBox="0 0 40 40" fill="none" role="img" aria-label="Nodara">
-          <path class="edge" d="M9 31 V9 L31 31 V9"/>
-          <circle class="node" cx="9" cy="31" r="3"/>
-          <circle class="node" cx="9" cy="9" r="3"/>
-          <circle class="node" cx="31" cy="31" r="3"/>
-          <circle class="node on" cx="31" cy="9" r="4.4"/>
-        </svg>
-        <span class="wordmark">Nodara</span>
+        <span class="wordmark">nodara</span>
       </div>
       <div class="cj-field cj-doc">
         <span class="cj-k">Documento</span>
@@ -161,7 +163,7 @@
     <div class="facts">
       <span class="lg"><svg width="15" height="15" viewBox="0 0 15 15"><circle cx="7.5" cy="7.5" r="5" fill="none" stroke="#101522" stroke-width="2"/></svg> 220 kV</span>
       <span class="lg"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="2.5" y="2.5" width="10" height="10" fill="none" stroke="#101522" stroke-width="2"/></svg> 400 kV</span>
-      <span class="lg"><svg width="15" height="15" viewBox="0 0 15 15"><circle cx="7.5" cy="7.5" r="5.5" fill="#1F7A44"/></svg> admite nueva demanda</span>
+      <span class="lg"><svg width="15" height="15" viewBox="0 0 15 15"><circle cx="7.5" cy="7.5" r="5.5" fill="#1B3FD8"/><!-- cobalto A PELO: dentro de un SVG el token no llega --></svg> admite nueva demanda</span>
       <span class="spec"><b>1</b> email / mes · Fuente <b>CNMC</b></span>
     </div>
 
